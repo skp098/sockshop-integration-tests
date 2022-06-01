@@ -1,0 +1,16 @@
+{
+  "name": "testing",
+  "version": "1.0.0",
+  "description": "testing for sock shop",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./node_modules/jasmine/bin/jasmine index.test.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "jasmine": "^4.1.0",
+    "testcontainers": "^8.10.1"
+  }
+}

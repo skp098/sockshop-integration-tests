@@ -3,6 +3,8 @@ const api_base_url = 'http://localhost';
 var user_id = null;
 const axiosInstance = axios.create({ baseURL: api_base_url });
 
+// Old describe which was a unit testing
+
 describe('catalogue apis', ()=>{
 
     it('get existing catalogues',async ()=>{        
@@ -35,13 +37,11 @@ describe('catalogue apis', ()=>{
         expect(typeof status_code).toEqual('undefined');        
 
     })
+})
 
-    // it('deleting the created a user',async ()=>{    
-    //     console.log("userid: "+user_id);
-    //     const response = await axios.delete(`${api_base_url}/customers/${user_id}`);                    
-    //     const status_code = JSON.parse(response.data).status_code;                        
-    //     expect(typeof status_code).toEqual('undefined');
-    // })  
+// new describe with integration testing for login and orders
+
+describe('login and order apis', ()=>{
 
     it('logging in a user',async ()=>{
 
@@ -66,10 +66,44 @@ describe('catalogue apis', ()=>{
 
 
     it('getting orders of the user',async ()=>{            
-        const response = await axiosInstance.get(`${api_base_url}/orders`,{ withCredentials: 'same-origin' });                    
-        console.log(response.status);
+        const response = await axiosInstance.get(`${api_base_url}/orders`,{ withCredentials: 'same-origin' });
         expect(response.status).toEqual(201);
-    }) 
+    })
+    
+})
 
+// describe for login and cart
+    
+describe('login and cart apis', ()=>{
+
+    it('logging in a user',async ()=>{
+
+        var username = 'user';
+        var password = 'password'
+
+        const token = `${username}:${password}`;
+        const encodedToken = Buffer.from(token).toString('base64');        
+
+        var config = {
+          method: 'get',
+          url: `${api_base_url}/login`,
+          headers: { 'Authorization': 'Basic '+ encodedToken }
+        };
+
+        const response = await axios(config);        
+        const cookie = response.headers["set-cookie"];
+        axiosInstance.defaults.headers.Cookie = cookie;        
+        expect(response.data).toEqual('Cookie is set');
+        
+    })
+
+    it('get cart',async ()=>{
+        const response = await axiosInstance.get(`${api_base_url}/cart`);
+        if(response.status==200){
+            expect(response.data.length).toEqual(1);
+        }else{
+            expect(true).toBeFalse();
+        }        
+    })    
 
 })
